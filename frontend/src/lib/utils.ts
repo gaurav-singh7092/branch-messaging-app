@@ -8,7 +8,18 @@ export function cn(...inputs: ClassValue[]) {
 export function formatDate(date: string | Date): string {
   const d = new Date(date);
   const now = new Date();
-  const diff = now.getTime() - d.getTime();
+  
+  // Ensure we're comparing UTC times properly
+  // If the date string doesn't have timezone info, treat it as UTC
+  const dateStr = typeof date === 'string' ? date : date.toISOString();
+  const isUTC = !dateStr.includes('+') && !dateStr.includes('Z') && !dateStr.match(/[+-]\d{2}:\d{2}$/);
+  
+  // If the timestamp appears to be UTC without a Z suffix, add it
+  const normalizedDate = isUTC && typeof date === 'string' && !date.endsWith('Z') 
+    ? new Date(date + 'Z') 
+    : d;
+  
+  const diff = now.getTime() - normalizedDate.getTime();
   
   // Less than a minute
   if (diff < 60000) {
@@ -34,15 +45,23 @@ export function formatDate(date: string | Date): string {
   }
   
   // Format as date
-  return d.toLocaleDateString('en-US', {
+  return normalizedDate.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: d.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
+    year: normalizedDate.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
   });
 }
 
 export function formatTime(date: string | Date): string {
-  return new Date(date).toLocaleTimeString('en-US', {
+  // Handle UTC timestamps from backend (without Z suffix)
+  const dateStr = typeof date === 'string' ? date : date.toISOString();
+  const isUTC = !dateStr.includes('+') && !dateStr.includes('Z') && !dateStr.match(/[+-]\d{2}:\d{2}$/);
+  
+  const normalizedDate = isUTC && typeof date === 'string' && !date.endsWith('Z')
+    ? new Date(date + 'Z')
+    : new Date(date);
+    
+  return normalizedDate.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,

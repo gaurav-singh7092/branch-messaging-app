@@ -124,7 +124,7 @@ async def receive_external_message(
         "content": message.content,
         "is_from_customer": True,
         "priority": priority.value,
-        "created_at": db_message.created_at.isoformat(),
+        "created_at": db_message.created_at.isoformat() + "Z",
         "customer_name": customer.name,
         "customer_email": customer.email
     })

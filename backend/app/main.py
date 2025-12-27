@@ -1,7 +1,10 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
+from datetime import datetime
+import json
 
 from .database import init_db
 from .api import (
@@ -15,6 +18,15 @@ from .api import (
 )
 
 
+class CustomJSONEncoder(json.JSONEncoder):
+    """Custom JSON encoder that handles datetime with UTC timezone"""
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            # Ensure UTC timestamps include 'Z' suffix
+            return obj.isoformat() + "Z" if not obj.tzinfo else obj.isoformat()
+        return super().default(obj)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Initialize database on startup"""
@@ -26,7 +38,8 @@ app = FastAPI(
     title="Branch Messaging API",
     description="Customer messaging platform for Branch agents",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    json_encoder=CustomJSONEncoder
 )
 
 # Configure CORS - allow configurable origins for deployment

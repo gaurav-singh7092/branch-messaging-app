@@ -240,7 +240,7 @@ async def send_agent_message(
         "content": message.content,
         "is_from_customer": False,
         "priority": db_message.priority.value,
-        "created_at": db_message.created_at.isoformat(),
+        "created_at": db_message.created_at.isoformat() + "Z",
         "agent_name": agent.name
     })
     
