@@ -2,14 +2,10 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, desc
 from sqlalchemy.orm import selectinload
-from typing import List, Optional
+from typing import Optional
 
 from ..database import get_db
 from ..models import Conversation, Message, Customer, MessagePriority, MessageStatus
-from ..schemas import (
-    SearchQuery, SearchResult, ConversationListResponse, 
-    CustomerResponse, MessagePriorityEnum, MessageStatusEnum
-)
 
 router = APIRouter(prefix="/search", tags=["search"])
 
@@ -18,8 +14,8 @@ router = APIRouter(prefix="/search", tags=["search"])
 async def search(
     q: str = Query(..., min_length=1, description="Search query"),
     search_in: str = Query("all", description="Where to search: all, messages, customers"),
-    priority: Optional[MessagePriorityEnum] = None,
-    status: Optional[MessageStatusEnum] = None,
+    priority: Optional[str] = Query(None, description="Filter by priority: urgent, high, medium, low"),
+    status: Optional[str] = Query(None, description="Filter by status: open, in_progress, resolved, closed"),
     limit: int = Query(50, le=100),
     db: AsyncSession = Depends(get_db)
 ):
@@ -34,6 +30,22 @@ async def search(
         "total_results": 0
     }
     
+    # Convert string filters to enums
+    priority_enum = None
+    status_enum = None
+    
+    if priority:
+        try:
+            priority_enum = MessagePriority(priority.lower())
+        except ValueError:
+            pass
+    
+    if status:
+        try:
+            status_enum = MessageStatus(status.lower())
+        except ValueError:
+            pass
+    
     # Search in messages/conversations
     if search_in in ["all", "messages"]:
         conv_query = select(Conversation).options(
@@ -44,11 +56,11 @@ async def search(
             Message.content.ilike(search_term)
         )
         
-        if priority:
-            conv_query = conv_query.where(Conversation.priority == priority)
+        if priority_enum:
+            conv_query = conv_query.where(Conversation.priority == priority_enum)
         
-        if status:
-            conv_query = conv_query.where(Conversation.status == status)
+        if status_enum:
+            conv_query = conv_query.where(Conversation.status == status_enum)
         
         conv_query = conv_query.distinct().order_by(
             desc(Conversation.updated_at)
@@ -96,7 +108,22 @@ async def search(
                 Customer.email.ilike(search_term),
                 Customer.phone.ilike(search_term)
             )
-        ).order_by(desc(Customer.last_activity)).limit(limit)
+        )
+        
+        # If priority or status filters are set, only show customers with matching conversations
+        if priority_enum or status_enum:
+            # Get customer IDs that have conversations matching the filters
+            conv_subquery = select(Conversation.customer_id).where(
+                Conversation.customer_id.isnot(None)
+            )
+            if priority_enum:
+                conv_subquery = conv_subquery.where(Conversation.priority == priority_enum)
+            if status_enum:
+                conv_subquery = conv_subquery.where(Conversation.status == status_enum)
+            
+            customer_query = customer_query.where(Customer.id.in_(conv_subquery))
+        
+        customer_query = customer_query.order_by(desc(Customer.last_activity)).limit(limit)
         
         result = await db.execute(customer_query)
         customers = result.scalars().all()
