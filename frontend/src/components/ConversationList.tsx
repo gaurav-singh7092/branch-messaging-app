@@ -116,7 +116,9 @@ export default function ConversationList({ selectedId, onSelect, agentId, onRefr
           newAssignedAgent = updateData.agent_id === null ? undefined : {
             id: updateData.agent_id,
             name: updateData.agent_name || `Agent ${updateData.agent_id}`,
-            email: ''
+            email: '',
+            is_online: true,
+            created_at: new Date().toISOString()
           };
         }
         
