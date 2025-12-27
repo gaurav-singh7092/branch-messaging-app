@@ -1,0 +1,463 @@
+{
+  "info": {
+    "name": "Branch Messaging API",
+    "description": "Collection for testing the Branch Messaging API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "External Messages",
+      "description": "Send messages as customers",
+      "item": [
+        {
+          "name": "Send Customer Message (New Customer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Hi, I applied for a loan 3 days ago and haven't heard back. When will my loan be approved?\",\n  \"customer_email\": \"test@example.com\",\n  \"customer_name\": \"Test Customer\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/external/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "external", "messages"]
+            }
+          }
+        },
+        {
+          "name": "Send Urgent Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"URGENT! I need my loan disbursed immediately. I have a medical emergency and need the funds today!\",\n  \"customer_email\": \"urgent@example.com\",\n  \"customer_name\": \"Urgent Customer\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/external/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "external", "messages"]
+            }
+          }
+        },
+        {
+          "name": "Send Follow-up Message (Existing Customer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Any update on my previous request?\",\n  \"customer_email\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/external/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "external", "messages"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Conversations",
+      "item": [
+        {
+          "name": "Get All Conversations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/conversations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conversations"]
+            }
+          }
+        },
+        {
+          "name": "Get Urgent Conversations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/conversations?priority=urgent",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conversations"],
+              "query": [
+                {
+                  "key": "priority",
+                  "value": "urgent"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Open Conversations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/conversations?status=open",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conversations"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "open"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Conversation Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/conversations/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conversations", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Single Conversation",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/conversations/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conversations", "1"]
+            }
+          }
+        },
+        {
+          "name": "Send Agent Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Hello! Thank you for contacting Branch support. I'm looking into your loan application now.\",\n  \"conversation_id\": 1,\n  \"agent_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/conversations/1/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conversations", "1", "messages"]
+            }
+          }
+        },
+        {
+          "name": "Update Conversation Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/conversations/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conversations", "1"]
+            }
+          }
+        },
+        {
+          "name": "Assign Conversation to Agent",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/conversations/1/assign/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conversations", "1", "assign", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Get All Customers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers"]
+            }
+          }
+        },
+        {
+          "name": "Search Customers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/customers?search=john",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "john"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Customer",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer Conversations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/1/conversations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "1", "conversations"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agents",
+      "item": [
+        {
+          "name": "Get All Agents",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/agents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agents"]
+            }
+          }
+        },
+        {
+          "name": "Create Agent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Agent\",\n  \"email\": \"new.agent@branch.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/agents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agents"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Canned Messages",
+      "item": [
+        {
+          "name": "Get All Canned Messages",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/canned-messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "canned-messages"]
+            }
+          }
+        },
+        {
+          "name": "Get Canned Messages by Category",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/canned-messages?category=Loan",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "canned-messages"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Loan"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Categories",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/canned-messages/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "canned-messages", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Create Canned Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Custom Response\",\n  \"content\": \"This is a custom canned response message.\",\n  \"category\": \"Custom\",\n  \"shortcut\": \"/custom\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/canned-messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "canned-messages"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "Search All",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/search?q=loan",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "loan"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Messages Only",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/search?q=urgent&search_in=messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "urgent"
+                },
+                {
+                  "key": "search_in",
+                  "value": "messages"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Customers Only",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/search?q=john&search_in=customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "john"
+                },
+                {
+                  "key": "search_in",
+                  "value": "customers"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search with Priority Filter",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/search?q=help&priority=urgent",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "help"
+                },
+                {
+                  "key": "priority",
+                  "value": "urgent"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    }
+  ]
+}
