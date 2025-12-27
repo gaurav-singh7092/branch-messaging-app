@@ -7,7 +7,7 @@ A full-featured customer messaging platform for Branch that enables agents to ef
 ### Core Features
 - **Real-time Messaging**: WebSocket-powered instant message delivery
 - **Multi-Agent Collaboration**: Multiple agents can work independently with exclusive conversation assignment
-- **Priority Detection**: AI-powered message urgency classification (Urgent, High, Medium, Low)
+- **Priority Detection**: Message urgency classification (Urgent, High, Medium, Low)
 - **Search Functionality**: Search across messages and customers with filters
 - **Customer Context Panel**: View customer profiles, loan status, and conversation history
 - **Canned Messages**: Pre-configured quick responses with shortcuts
@@ -290,11 +290,6 @@ Customer messages are loaded from `GeneralistRails_Project_MessageData.csv` whic
 - [ ] Message templates with variables
 - [ ] Analytics dashboard
 - [ ] Mobile responsive design improvements
-- [ ] AI-powered response suggestions
-- [ ] SLA tracking and alerts
-- [ ] Integration with external CRM systems
-- [ ] Conversation transfer between agents
-- [ ] Typing indicators for real-time feedback
 
 ## 📄 License
 
