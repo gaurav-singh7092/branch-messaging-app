@@ -56,14 +56,14 @@ export default function CustomerSimulator() {
 
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-      <div className="px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600">
-        <h2 className="text-lg font-semibold text-white">Customer Message Simulator</h2>
-        <p className="text-green-100 text-sm">Send messages as a customer to test the system</p>
+      <div className="px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600">
+        <h2 className="text-base font-semibold text-white">Customer Message Simulator</h2>
+        <p className="text-green-100 text-xs">Send messages as a customer to test the system</p>
       </div>
 
-      <div className="p-6 space-y-4">
-        {/* Customer Info */}
-        <div className="grid grid-cols-2 gap-4">
+      <div className="p-4 space-y-3">
+        {/* Customer Info - Stack vertically for narrow width */}
+        <div className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Customer Name
@@ -73,7 +73,7 @@ export default function CustomerSimulator() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="John Doe"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
           </div>
           <div>
@@ -85,7 +85,7 @@ export default function CustomerSimulator() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="customer@email.com"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -99,8 +99,8 @@ export default function CustomerSimulator() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your customer message here..."
-            rows={4}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+            rows={3}
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
           />
         </div>
 
@@ -109,14 +109,15 @@ export default function CustomerSimulator() {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Quick Sample Messages
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-col gap-1.5 max-h-32 overflow-y-auto">
             {sampleMessages.map((sample, index) => (
               <button
                 key={index}
                 onClick={() => setMessage(sample)}
-                className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-left truncate"
+                title={sample}
               >
-                {sample.slice(0, 30)}...
+                {sample.slice(0, 40)}...
               </button>
             ))}
           </div>
@@ -124,15 +125,15 @@ export default function CustomerSimulator() {
 
         {/* Error/Success Messages */}
         {error && (
-          <div className="flex items-center gap-2 px-4 py-3 bg-red-50 text-red-700 rounded-lg">
-            <X className="w-5 h-5" />
-            {error}
+          <div className="flex items-center gap-2 px-3 py-2 bg-red-50 text-red-700 rounded-lg text-sm">
+            <X className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">{error}</span>
           </div>
         )}
         {success && (
-          <div className="flex items-center gap-2 px-4 py-3 bg-green-50 text-green-700 rounded-lg">
-            <CheckCircle className="w-5 h-5" />
-            Message sent successfully! Check the agent portal.
+          <div className="flex items-center gap-2 px-3 py-2 bg-green-50 text-green-700 rounded-lg text-sm">
+            <CheckCircle className="w-4 h-4 flex-shrink-0" />
+            <span>Message sent!</span>
           </div>
         )}
 
@@ -140,7 +141,7 @@ export default function CustomerSimulator() {
         <button
           onClick={handleSend}
           disabled={sending}
-          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
         >
           {sending ? (
             <>

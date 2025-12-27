@@ -175,7 +175,7 @@ function DashboardContent() {
       <div className="flex-1 flex overflow-hidden">
         {/* Customer Simulator Panel */}
         {showSimulator && (
-          <div className="w-96 border-r border-gray-200 bg-gray-50 p-4 overflow-y-auto">
+          <div className="w-80 flex-shrink-0 border-r border-gray-200 bg-gray-50 p-3 overflow-y-auto">
             <CustomerSimulator />
           </div>
         )}
